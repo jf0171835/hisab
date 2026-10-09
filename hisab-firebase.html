@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>আমার হিসাব</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<style>
+:root{--bg:#f3f6f5;--card:#fff;--ink:#14302b;--mute:#62786f;--line:#dbe5e1;--inc:#0f8a5f;--exp:#c2410c;--acc:#14564a;--accink:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a17;--card:#17262a;--ink:#e6f1ed;--mute:#8fa8a0;--line:#26403b;--inc:#3ddc97;--exp:#ff8a5c;--acc:#3ddc97;--accink:#0f1a17}}
+:root[data-theme="dark"]{--bg:#0f1a17;--card:#17262a;--ink:#e6f1ed;--mute:#8fa8a0;--line:#26403b;--inc:#3ddc97;--exp:#ff8a5c;--acc:#3ddc97;--accink:#0f1a17}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hind Siliguri","Noto Sans Bengali","Kohinoor Bangla",system-ui,sans-serif;font-size:16px;line-height:1.5}
+main{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+input,select,button{font:inherit;color:inherit}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.month{width:auto}
+.bal{background:var(--acc);color:var(--accink);border-radius:18px;padding:20px}
+.bal small{opacity:.85}
+.bal .big{font-size:38px;font-weight:700;line-height:1.2}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.two div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.two small{color:var(--mute);display:block}
+.two b{font-size:20px}
+.i b{color:var(--inc)}.e b{color:var(--exp)}
+section{margin-top:18px}
+h2{font-size:17px;margin:0 0 8px}
+form{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg button{padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);cursor:pointer;font-weight:600}
+.seg button.on.in{background:var(--inc);color:#fff;border-color:var(--inc)}
+.seg button.on.ex{background:var(--exp);color:#fff;border-color:var(--exp)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.add{padding:12px;border:0;border-radius:10px;background:var(--acc);color:var(--accink);font-weight:700;cursor:pointer}
+.cat{margin-bottom:8px}
+.cat div{display:flex;justify-content:space-between;font-size:14px}
+.bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;background:var(--exp)}
+ul{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:14px}
+li{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+li:last-child{border-bottom:0}
+li .t{flex:1;min-width:0}
+li .t span{display:block;font-size:13px;color:var(--mute);overflow-wrap:anywhere}
+li .a{font-weight:700;white-space:nowrap}
+li.in .a{color:var(--inc)}li.ex .a{color:var(--exp)}
+li button{border:0;background:none;color:var(--mute);font-size:20px;cursor:pointer;padding:4px 8px}
+.empty{padding:18px;text-align:center;color:var(--mute)}
+.hd{display:flex;gap:8px}
+.lkb{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:0 12px;cursor:pointer}
+body.locked main{display:none}
+body.locked{overflow:hidden}
+#lock{display:none;position:fixed;inset:0;z-index:10;align-items:center;justify-content:center;padding:20px;background:#06201c}
+body.locked #lock{display:flex}
+#wall{position:absolute;inset:0;width:100%;height:100%}
+.box{position:relative;width:100%;max-width:340px;padding:28px 22px;border-radius:24px;background:rgba(255,255,255,.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.25);color:#fff;text-align:center}
+.box input{color:#14302b;background:rgba(255,255,255,.92);text-align:center}
+.box p{margin:0 0 4px;opacity:.85;font-size:14px}
+.box h2{font-size:24px;margin:0}
+.lg{font-size:40px}
+#le{min-height:22px;color:#ffd0b8;font-size:14px}
+.lnk{background:none;border:0;color:#fff;opacity:.8;text-decoration:underline;cursor:pointer;font-size:14px}
+.lnk{display:block;margin:8px auto 0}
+.lkb{font-size:14px}
+</style>
+</head>
+<body class="locked">
+<div id="lock"><canvas id="wall"></canvas><form class="box" id="lf"><div class="lg">💰</div><h2 id="lt">লগইন করুন</h2><p id="ls">আপনার হিসাব দেখতে ইমেইল ও পাসওয়ার্ড দিন</p><input type="email" id="em" placeholder="ইমেইল" autocomplete="email" required><input type="password" id="p1" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" autocomplete="current-password" required minlength="6"><button class="add" id="lb" type="submit">লগইন</button><div id="le" role="alert"></div><button type="button" id="sw" class="lnk">নতুন অ্যাকাউন্ট খুলুন</button><button type="button" id="fg" class="lnk">পাসওয়ার্ড ভুলে গেছেন?</button></form></div>
+<main>
+<header><h1>আমার হিসাব</h1><div class="hd"><input class="month" type="month" id="month" aria-label="মাস বাছাই করুন"><button type="button" id="lk" class="lkb" aria-label="লগ আউট">বের হন</button></div></header>
+
+<div class="bal"><small>এই মাসের অবশিষ্ট</small><div class="big" id="bal">৳ ০</div></div>
+<div class="two">
+<div class="i"><small>মোট আয়</small><b id="inc">৳ ০</b></div>
+<div class="e"><small>মোট ব্যয়</small><b id="exp">৳ ০</b></div>
+</div>
+
+<section>
+<h2>নতুন হিসাব যোগ করুন</h2>
+<form id="f">
+<div class="seg"><button type="button" class="in on" id="bi">আয়</button><button type="button" class="ex" id="be">ব্যয়</button></div>
+<div class="row"><input type="number" id="amt" min="1" step="any" inputmode="decimal" placeholder="টাকার পরিমাণ" required><input type="date" id="date" required></div>
+<select id="cat" aria-label="খাত"></select>
+<input type="text" id="note" placeholder="বিবরণ (ঐচ্ছিক)" maxlength="80">
+<button class="add" type="submit">হিসাব সংরক্ষণ করুন</button>
+</form>
+</section>
+
+<section><h2>খাত অনুযায়ী ব্যয়</h2><div id="cats"></div></section>
+
+<section><h2>লেনদেনের তালিকা</h2><ul id="list"></ul></section>
+</main>
+<script>
+var firebaseConfig={
+  apiKey:"AIzaSyAjrw4r74vQEOHWVg5cBGt8x8EgwQmy_CM",
+  authDomain:"hisab-app-958c7.firebaseapp.com",
+  databaseURL:"https://hisab-app-958c7-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"hisab-app-958c7",
+  storageBucket:"hisab-app-958c7.firebasestorage.app",
+  messagingSenderId:"218789496944",
+  appId:"1:218789496944:web:fca7148063f04a51a38cb5"
+};
+firebase.initializeApp(firebaseConfig);
+var auth=firebase.auth(),db=firebase.database(),uref=null,signup=false,data=[],type="in";
+var CATS={in:["বেতন","টিউশন","ব্যবসা","উপহার","অন্যান্য আয়"],ex:["বাজার","বাসা ভাড়া","বিল","যাতায়াত","চিকিৎসা","শিক্ষা","দান/সদকা","অন্যান্য ব্যয়"]};
+var $=function(i){return document.getElementById(i)};
+var bn=function(n){return Number(n).toLocaleString("bn-BD",{maximumFractionDigits:2})};
+var tk=function(n){return "৳ "+bn(n)};
+function today(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+$("date").value=today();$("month").value=today().slice(0,7);
+function fillCats(){$("cat").innerHTML=CATS[type].map(function(c){return "<option>"+c+"</option>"}).join("")}
+function setType(t){type=t;$("bi").className="in"+(t=="in"?" on":"");$("be").className="ex"+(t=="ex"?" on":"");fillCats()}
+$("bi").onclick=function(){setType("in")};$("be").onclick=function(){setType("ex")};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function render(){
+ var m=$("month").value,rows=data.filter(function(x){return x.date&&x.date.slice(0,7)==m}).sort(function(a,b){return b.date.localeCompare(a.date)||(b.ts||0)-(a.ts||0)});
+ var inc=0,exp=0,by={};
+ rows.forEach(function(x){if(x.type=="in")inc+=x.amt;else{exp+=x.amt;by[x.cat]=(by[x.cat]||0)+x.amt}});
+ $("inc").textContent=tk(inc);$("exp").textContent=tk(exp);$("bal").textContent=tk(inc-exp);
+ var ks=Object.keys(by).sort(function(a,b){return by[b]-by[a]});
+ $("cats").innerHTML=ks.length?ks.map(function(k){var p=Math.round(by[k]/exp*100);return '<div class="cat"><div><span>'+esc(k)+'</span><span>'+tk(by[k])+' ('+bn(p)+'%)</span></div><div class="bar"><i style="width:'+p+'%"></i></div></div>'}).join(""):'<div class="empty">এই মাসে কোনো ব্যয় নেই</div>';
+ $("list").innerHTML=rows.length?rows.map(function(x){var d=new Date(x.date+"T00:00:00").toLocaleDateString("bn-BD",{day:"numeric",month:"long"});return '<li class="'+x.type+'"><div class="t">'+esc(x.cat)+'<span>'+d+(x.note?" — "+esc(x.note):"")+'</span></div><div class="a">'+(x.type=="in"?"+":"−")+tk(x.amt)+'</div><button data-id="'+esc(x.id)+'" aria-label="মুছে ফেলুন">×</button></li>'}).join(""):'<div class="empty">কোনো লেনদেন নেই। উপরে প্রথম হিসাবটি যোগ করুন।</div>';
+}
+$("f").onsubmit=function(e){e.preventDefault();
+ var a=parseFloat($("amt").value);if(!(a>0)||!uref)return;
+ uref.push({type:type,amt:a,cat:$("cat").value,date:$("date").value,note:$("note").value.trim(),ts:Date.now()});
+ $("month").value=$("date").value.slice(0,7);$("amt").value="";$("note").value=""};
+$("list").onclick=function(e){var id=e.target.getAttribute&&e.target.getAttribute("data-id");
+ if(id&&uref&&confirm("এই লেনদেনটি মুছে ফেলবেন?"))uref.child(id).remove()};
+$("month").onchange=render;
+setType("in");render();
+
+var wall=$("wall"),cx=wall.getContext("2d"),raf=0,W=0,H=0,rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+var orbs=[[.2,.3,.55,160,.00021],[.8,.25,.5,45,.00017],[.5,.8,.6,190,.00025],[.15,.85,.4,140,.00019],[.85,.75,.45,170,.00023]];
+var stars=[];for(var i=0;i<60;i++)stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.4,s:Math.random()*.00006+.00003,p:Math.random()*6});
+function size(){var d=window.devicePixelRatio||1;W=innerWidth;H=innerHeight;wall.width=W*d;wall.height=H*d;cx.setTransform(d,0,0,d,0,0)}
+function frame(t){
+ cx.globalCompositeOperation="source-over";cx.fillStyle="#06201c";cx.fillRect(0,0,W,H);
+ cx.globalCompositeOperation="lighter";
+ orbs.forEach(function(o,i){var x=(o[0]+Math.sin(t*o[4]+i)*.18)*W,y=(o[1]+Math.cos(t*o[4]*1.3+i*2)*.15)*H,r=o[2]*Math.max(W,H)*.7;
+  var g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,"hsla("+o[3]+",80%,45%,.45)");g.addColorStop(1,"hsla("+o[3]+",80%,45%,0)");cx.fillStyle=g;cx.fillRect(0,0,W,H)});
+ stars.forEach(function(s){var y=((s.y-t*s.s)%1+1)%1;cx.globalAlpha=.35+.35*Math.sin(t*.002+s.p);cx.fillStyle="#fff";cx.beginPath();cx.arc(s.x*W,y*H,s.r,0,6.283);cx.fill()});
+ cx.globalAlpha=1;
+ if(!rm)raf=requestAnimationFrame(frame)}
+function startWall(){size();cancelAnimationFrame(raf);frame(performance.now())}
+function stopWall(){cancelAnimationFrame(raf)}
+addEventListener("resize",function(){if(document.body.className=="locked")size()});
+
+function msg(t){$("le").textContent=t}
+function err(e){var c=e&&e.code,m={"auth/invalid-credential":"ইমেইল বা পাসওয়ার্ড ভুল হয়েছে","auth/wrong-password":"ইমেইল বা পাসওয়ার্ড ভুল হয়েছে","auth/user-not-found":"ইমেইল বা পাসওয়ার্ড ভুল হয়েছে","auth/email-already-in-use":"এই ইমেইলে আগেই অ্যাকাউন্ট আছে, লগইন করুন","auth/weak-password":"পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের দিন","auth/invalid-email":"ইমেইল ঠিকমতো লিখুন","auth/network-request-failed":"ইন্টারনেট সংযোগ পরীক্ষা করুন","auth/too-many-requests":"অনেকবার চেষ্টা হয়েছে, কিছুক্ষণ পরে আবার করুন"};
+ msg(m[c]||"সমস্যা হয়েছে, আবার চেষ্টা করুন")}
+function mode(s){signup=s;$("lt").textContent=s?"নতুন অ্যাকাউন্ট":"লগইন করুন";$("ls").textContent=s?"ইমেইল ও একটি পাসওয়ার্ড দিয়ে অ্যাকাউন্ট খুলুন":"আপনার হিসাব দেখতে ইমেইল ও পাসওয়ার্ড দিন";$("lb").textContent=s?"অ্যাকাউন্ট খুলুন":"লগইন";$("sw").textContent=s?"আগে থেকেই অ্যাকাউন্ট আছে? লগইন করুন":"নতুন অ্যাকাউন্ট খুলুন";$("fg").style.display=s?"none":"block";$("p1").autocomplete=s?"new-password":"current-password";msg("")}
+$("sw").onclick=function(){mode(!signup)};
+$("lf").onsubmit=function(e){e.preventDefault();msg("");var em=$("em").value.trim(),pw=$("p1").value;$("lb").disabled=true;
+ (signup?auth.createUserWithEmailAndPassword(em,pw):auth.signInWithEmailAndPassword(em,pw)).catch(err).then(function(){$("lb").disabled=false})};
+$("fg").onclick=function(){var em=$("em").value.trim();if(!em){msg("আগে উপরে ইমেইল লিখুন");return}
+ auth.sendPasswordResetEmail(em).then(function(){msg("পাসওয়ার্ড বদলের লিংক ইমেইলে পাঠানো হয়েছে")}).catch(err)};
+$("lk").onclick=function(){auth.signOut()};
+function showLock(){document.body.className="locked";$("p1").value="";mode(false);startWall()}
+auth.onAuthStateChanged(function(u){
+ if(uref){uref.off();uref=null}
+ if(u){document.body.className="";stopWall();
+  uref=db.ref("users/"+u.uid+"/tx");
+  uref.on("value",function(s){var v=s.val()||{};data=Object.keys(v).map(function(k){var x=v[k];x.id=k;return x});render()},function(){$("list").innerHTML='<div class="empty">ডাটা পড়তে সমস্যা হয়েছে, ইন্টারনেট ও রুলস পরীক্ষা করুন</div>'});
+ }else{data=[];render();showLock()}
+});
+</script>
+</body>
+</html>
