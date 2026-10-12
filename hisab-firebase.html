@@ -69,6 +69,14 @@ body.locked #lock{display:flex}
 .lnk{background:none;border:0;color:#fff;opacity:.8;text-decoration:underline;cursor:pointer;font-size:14px}
 .lnk{display:block;margin:8px auto 0}
 .lkb{font-size:14px}
+.lbox{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--card);cursor:pointer}
+.lbox span{display:block}.lbox b{font-size:17px}.lbox small{display:block;color:var(--mute)}.lbox i{font-style:normal;font-size:28px;color:var(--mute)}
+#sheet{position:fixed;inset:0;z-index:5;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+#sheet[hidden]{display:none}
+.sh{background:var(--bg);width:100%;max-width:640px;max-height:88%;border-radius:20px 20px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
+.shh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
+.shh h2{margin:0}.shh button{border:0;background:none;font-size:28px;line-height:1;color:var(--mute);cursor:pointer;padding:0 6px}
+.sh ul{overflow-y:auto;margin:12px 16px 16px}
 </style>
 </head>
 <body class="locked">
@@ -95,8 +103,9 @@ body.locked #lock{display:flex}
 
 <section><h2>খাত অনুযায়ী ব্যয়</h2><div id="cats"></div></section>
 
-<section><h2>লেনদেনের তালিকা</h2><ul id="list"></ul></section>
+<section><button type="button" id="open" class="lbox"><span><b>লেনদেনের তালিকা</b><small id="cnt"></small></span><i>›</i></button></section>
 </main>
+<div id="sheet" hidden><div class="sh"><div class="shh"><h2>লেনদেনের তালিকা</h2><button type="button" id="cl" aria-label="বন্ধ করুন">×</button></div><ul id="list"></ul></div></div>
 <script>
 var firebaseConfig={
   apiKey:"AIzaSyAjrw4r74vQEOHWVg5cBGt8x8EgwQmy_CM",
@@ -123,7 +132,7 @@ function render(){
  var m=$("month").value,rows=data.filter(function(x){return x.date&&x.date.slice(0,7)==m}).sort(function(a,b){return b.date.localeCompare(a.date)||(b.ts||0)-(a.ts||0)});
  var inc=0,exp=0,by={};
  rows.forEach(function(x){if(x.type=="in")inc+=x.amt;else{exp+=x.amt;by[x.cat]=(by[x.cat]||0)+x.amt}});
- $("inc").textContent=tk(inc);$("exp").textContent=tk(exp);$("bal").textContent=tk(inc-exp);
+ $("inc").textContent=tk(inc);$("cnt").textContent=rows.length?"এই মাসে "+bn(rows.length)+" টি লেনদেন, সব দেখতে চাপুন":"এই মাসে কোনো লেনদেন নেই";$("exp").textContent=tk(exp);$("bal").textContent=tk(inc-exp);
  var ks=Object.keys(by).sort(function(a,b){return by[b]-by[a]});
  $("cats").innerHTML=ks.length?ks.map(function(k){var p=Math.round(by[k]/exp*100);return '<div class="cat"><div><span>'+esc(k)+'</span><span>'+tk(by[k])+' ('+bn(p)+'%)</span></div><div class="bar"><i style="width:'+p+'%"></i></div></div>'}).join(""):'<div class="empty">এই মাসে কোনো ব্যয় নেই</div>';
  $("list").innerHTML=rows.length?rows.map(function(x){var d=new Date(x.date+"T00:00:00").toLocaleDateString("bn-BD",{day:"numeric",month:"long"});return '<li class="'+x.type+'"><div class="t">'+esc(x.cat)+'<span>'+d+(x.note?" — "+esc(x.note):"")+'</span></div><div class="a">'+(x.type=="in"?"+":"−")+tk(x.amt)+'</div><button data-id="'+esc(x.id)+'" aria-label="মুছে ফেলুন">×</button></li>'}).join(""):'<div class="empty">কোনো লেনদেন নেই। উপরে প্রথম হিসাবটি যোগ করুন।</div>';
@@ -163,7 +172,11 @@ $("lf").onsubmit=function(e){e.preventDefault();msg("");var em=$("em").value.tri
 $("fg").onclick=function(){var em=$("em").value.trim();if(!em){msg("আগে উপরে ইমেইল লিখুন");return}
  auth.sendPasswordResetEmail(em).then(function(){msg("পাসওয়ার্ড বদলের লিংক ইমেইলে পাঠানো হয়েছে")}).catch(err)};
 $("lk").onclick=function(){auth.signOut()};
-function showLock(){document.body.className="locked";$("p1").value="";mode(false);startWall()}
+function showLock(){document.body.className="locked";$("sheet").hidden=true;$("p1").value="";mode(false);startWall()}
+$("open").onclick=function(){$("sheet").hidden=false};
+$("cl").onclick=function(){$("sheet").hidden=true};
+$("sheet").onclick=function(e){if(e.target===this)this.hidden=true};
+addEventListener("keydown",function(e){if(e.key==="Escape")$("sheet").hidden=true});
 auth.onAuthStateChanged(function(u){
  if(uref){uref.off();uref=null}
  if(u){document.body.className="";stopWall();
