@@ -71,7 +71,7 @@ body.locked #lock{display:flex}
 .lkb{font-size:14px}
 .lbox{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--card);cursor:pointer}
 .lbox span{display:block}.lbox b{font-size:17px}.lbox small{display:block;color:var(--mute)}.lbox i{font-style:normal;font-size:28px;color:var(--mute)}
-#sheet,#dsheet{position:fixed;inset:0;z-index:5;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+#sheet,#psheet,#dsheet{position:fixed;inset:0;z-index:5;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
 #sheet[hidden],#dsheet[hidden],[hidden]{display:none!important}
 .sh{background:var(--bg);width:100%;max-width:640px;max-height:88%;border-radius:20px 20px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
 .shh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
@@ -122,9 +122,10 @@ body.locked #lock{display:flex}
 <select id="dk" aria-label="ধরন"><option value="lend">ধার দিলাম (আমি পাব)</option><option value="recv">ফেরত পেলাম (সে শোধ করল)</option><option value="borrow">ধার নিলাম (আমি দেব)</option><option value="repay">ফেরত দিলাম (আমি শোধ করলাম)</option></select>
 <div class="row"><input type="number" id="da" min="1" step="any" inputmode="decimal" placeholder="টাকার পরিমাণ" required><input type="date" id="dd" required></div>
 <input type="text" id="dnote" placeholder="বিবরণ (ঐচ্ছিক)" maxlength="80"><button class="add" type="submit">সংরক্ষণ করুন</button></form></section>
-<section><h2>ব্যক্তি অনুযায়ী হিসাব</h2><ul id="plist"></ul></section>
+<section><button type="button" id="popen" class="lbox"><span><b>ব্যক্তি অনুযায়ী হিসাব</b><small id="pcnt"></small></span><i>›</i></button></section>
 </div>
 </main>
+<div id="psheet" hidden><div class="sh"><div class="shh"><h2>ব্যক্তি অনুযায়ী হিসাব</h2><button type="button" id="pcl" aria-label="বন্ধ করুন">×</button></div><ul id="plist"></ul></div></div>
 <div id="dsheet" hidden><div class="sh"><div class="shh"><h2 id="dtitle"></h2><button type="button" id="dcl" aria-label="বন্ধ করুন">×</button></div><div id="dsum"></div><ul id="dlist"></ul><button class="add" id="dadd" type="button">এই ব্যক্তির নতুন লেনদেন যোগ করুন</button></div></div>
 <div id="sheet" hidden><div class="sh"><div class="shh"><h2>লেনদেনের তালিকা</h2><button type="button" id="cl" aria-label="বন্ধ করুন">×</button></div><ul id="list"></ul></div></div>
 <script>
@@ -193,7 +194,7 @@ $("lf").onsubmit=function(e){e.preventDefault();msg("");var em=$("em").value.tri
 $("fg").onclick=function(){var em=$("em").value.trim();if(!em){msg("আগে উপরে ইমেইল লিখুন");return}
  auth.sendPasswordResetEmail(em).then(function(){msg("পাসওয়ার্ড বদলের লিংক ইমেইলে পাঠানো হয়েছে")}).catch(err)};
 $("lk").onclick=function(){auth.signOut()};
-function showLock(){document.body.className="locked";$("sheet").hidden=true;$("dsheet").hidden=true;tab(1);$("p1").value="";mode(false);startWall()}
+function showLock(){document.body.className="locked";$("sheet").hidden=true;$("psheet").hidden=true;$("dsheet").hidden=true;tab(1);$("p1").value="";mode(false);startWall()}
 var dref=null,debts=[],pcache=[],curP=null;
 var DT={lend:{l:"ধার দিলাম",s:1},recv:{l:"ফেরত পেলাম",s:-1},borrow:{l:"ধার নিলাম",s:-1},repay:{l:"ফেরত দিলাম",s:1}};
 $("dd").value=today();
@@ -206,6 +207,7 @@ function renderD(){
  ps.forEach(function(p){if(p.net>0)get+=p.net;else owe-=p.net});
  pcache=ps;var n=get-owe;
  $("dget").textContent=tk(get);$("dowe").textContent=tk(owe);$("dbal").textContent=(n<0?"−":"")+tk(Math.abs(n));
+ $("pcnt").textContent=ps.length?bn(ps.length)+" জনের হিসাব, সব দেখতে চাপুন":"কোনো দেনা-পাওনা নেই";
  $("dnames").innerHTML=ps.map(function(p){return '<option value="'+esc(p.name)+'">'}).join("");
  $("plist").innerHTML=ps.length?ps.map(function(p,i){var c=p.net>0?"in":p.net<0?"ex":"";var t=p.net>0?"পাব "+tk(p.net):p.net<0?"দেব "+tk(-p.net):"মিটে গেছে";return '<li class="pl '+c+'" data-i="'+i+'"><div class="t">'+esc(p.name)+'<span>'+bn(p.rows.length)+' টি লেনদেন</span></div><div class="a" style="'+(c?"":"color:var(--mute)")+'">'+t+'</div><i>›</i></li>'}).join(""):'<div class="empty">কোনো দেনা-পাওনা নেই। উপরে প্রথম হিসাবটি যোগ করুন।</div>';
  if(!$("dsheet").hidden)drawP()}
@@ -219,16 +221,19 @@ function drawP(){
  $("dlist").innerHTML=rows.map(function(x){var out=x.kind=="lend"||x.kind=="repay";var d=new Date(x.date+"T00:00:00").toLocaleDateString("bn-BD",{day:"numeric",month:"long",year:"numeric"});return '<li class="'+(out?"ex":"in")+'"><div class="t">'+DT[x.kind].l+'<span>'+d+(x.note?" — "+esc(x.note):"")+'</span></div><div class="a">'+(out?"−":"+")+tk(x.amt)+'</div><button data-id="'+esc(x.id)+'" aria-label="মুছে ফেলুন">×</button></li>'}).join("")}
 $("plist").onclick=function(e){var li=e.target.closest&&e.target.closest("li[data-i]");if(li)openP(pcache[+li.getAttribute("data-i")].name)};
 $("dlist").onclick=function(e){var id=e.target.getAttribute&&e.target.getAttribute("data-id");if(id&&dref&&confirm("এই লেনদেনটি মুছে ফেলবেন?"))dref.child(id).remove()};
+$("popen").onclick=function(){$("psheet").hidden=false};
+$("pcl").onclick=function(){$("psheet").hidden=true};
+$("psheet").onclick=function(e){if(e.target===this)this.hidden=true};
 $("dcl").onclick=function(){$("dsheet").hidden=true};
 $("dsheet").onclick=function(e){if(e.target===this)this.hidden=true};
-$("dadd").onclick=function(){$("dn").value=curP||"";$("dsheet").hidden=true;$("dn").scrollIntoView({block:"center"});$("da").focus()};
+$("dadd").onclick=function(){$("dn").value=curP||"";$("dsheet").hidden=true;$("psheet").hidden=true;$("dn").scrollIntoView({block:"center"});$("da").focus()};
 $("df").onsubmit=function(e){e.preventDefault();var a=parseFloat($("da").value),n=$("dn").value.trim().replace(/\s+/g," ");if(!(a>0)||!n||!dref)return;
  dref.push({name:n,kind:$("dk").value,amt:a,date:$("dd").value,note:$("dnote").value.trim(),ts:Date.now()});
  $("dn").value="";$("da").value="";$("dnote").value=""};
 $("open").onclick=function(){$("sheet").hidden=false};
 $("cl").onclick=function(){$("sheet").hidden=true};
 $("sheet").onclick=function(e){if(e.target===this)this.hidden=true};
-addEventListener("keydown",function(e){if(e.key==="Escape")$("sheet").hidden=true});
+addEventListener("keydown",function(e){if(e.key==="Escape"){if(!$("dsheet").hidden)$("dsheet").hidden=true;else if(!$("psheet").hidden)$("psheet").hidden=true;else $("sheet").hidden=true}});
 auth.onAuthStateChanged(function(u){
  if(uref){uref.off();uref=null}if(dref){dref.off();dref=null}
  if(u){document.body.className="";stopWall();
