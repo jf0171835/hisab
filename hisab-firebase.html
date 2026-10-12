@@ -71,18 +71,27 @@ body.locked #lock{display:flex}
 .lkb{font-size:14px}
 .lbox{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--card);cursor:pointer}
 .lbox span{display:block}.lbox b{font-size:17px}.lbox small{display:block;color:var(--mute)}.lbox i{font-style:normal;font-size:28px;color:var(--mute)}
-#sheet{position:fixed;inset:0;z-index:5;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
-#sheet[hidden]{display:none}
+#sheet,#dsheet{position:fixed;inset:0;z-index:5;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+#sheet[hidden],#dsheet[hidden],[hidden]{display:none!important}
 .sh{background:var(--bg);width:100%;max-width:640px;max-height:88%;border-radius:20px 20px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
 .shh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
 .shh h2{margin:0}.shh button{border:0;background:none;font-size:28px;line-height:1;color:var(--mute);cursor:pointer;padding:0 6px}
 .sh ul{overflow-y:auto;margin:12px 16px 16px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.tabs button{padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-weight:600;cursor:pointer}
+.tabs button.on{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+.d2{background:#2b4a7c;color:#fff}
+.pl{cursor:pointer}.pl i{font-style:normal;font-size:24px;color:var(--mute)}
+#dsum{padding:10px 16px 0;color:var(--mute)}
+#dadd{margin:0 16px 16px}
 </style>
 </head>
 <body class="locked">
 <div id="lock"><canvas id="wall"></canvas><form class="box" id="lf"><div class="lg">💰</div><h2 id="lt">লগইন করুন</h2><p id="ls">আপনার হিসাব দেখতে ইমেইল ও পাসওয়ার্ড দিন</p><input type="email" id="em" placeholder="ইমেইল" autocomplete="email" required><input type="password" id="p1" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" autocomplete="current-password" required minlength="6"><button class="add" id="lb" type="submit">লগইন</button><div id="le" role="alert"></div><button type="button" id="sw" class="lnk">নতুন অ্যাকাউন্ট খুলুন</button><button type="button" id="fg" class="lnk">পাসওয়ার্ড ভুলে গেছেন?</button></form></div>
 <main>
 <header><h1>আমার হিসাব</h1><div class="hd"><input class="month" type="month" id="month" aria-label="মাস বাছাই করুন"><button type="button" id="lk" class="lkb" aria-label="লগ আউট">বের হন</button></div></header>
+<div class="tabs"><button type="button" id="t1" class="on">আয়-ব্যয়</button><button type="button" id="t2">দেনা-পাওনা</button></div>
+<div id="v1">
 
 <div class="bal"><small>এই মাসের অবশিষ্ট</small><div class="big" id="bal">৳ ০</div></div>
 <div class="two">
@@ -104,7 +113,19 @@ body.locked #lock{display:flex}
 <section><h2>খাত অনুযায়ী ব্যয়</h2><div id="cats"></div></section>
 
 <section><button type="button" id="open" class="lbox"><span><b>লেনদেনের তালিকা</b><small id="cnt"></small></span><i>›</i></button></section>
+</div>
+<div id="v2" hidden>
+<div class="bal d2"><small>নেট (আমি পাব − আমি দেব)</small><div class="big" id="dbal">৳ ০</div></div>
+<div class="two"><div class="i"><small>আমি পাব</small><b id="dget">৳ ০</b></div><div class="e"><small>আমি দেব</small><b id="dowe">৳ ০</b></div></div>
+<section><h2>নতুন দেনা-পাওনা যোগ করুন</h2>
+<form id="df"><input type="text" id="dn" list="dnames" placeholder="ব্যক্তির নাম" maxlength="40" required><datalist id="dnames"></datalist>
+<select id="dk" aria-label="ধরন"><option value="lend">ধার দিলাম (আমি পাব)</option><option value="recv">ফেরত পেলাম (সে শোধ করল)</option><option value="borrow">ধার নিলাম (আমি দেব)</option><option value="repay">ফেরত দিলাম (আমি শোধ করলাম)</option></select>
+<div class="row"><input type="number" id="da" min="1" step="any" inputmode="decimal" placeholder="টাকার পরিমাণ" required><input type="date" id="dd" required></div>
+<input type="text" id="dnote" placeholder="বিবরণ (ঐচ্ছিক)" maxlength="80"><button class="add" type="submit">সংরক্ষণ করুন</button></form></section>
+<section><h2>ব্যক্তি অনুযায়ী হিসাব</h2><ul id="plist"></ul></section>
+</div>
 </main>
+<div id="dsheet" hidden><div class="sh"><div class="shh"><h2 id="dtitle"></h2><button type="button" id="dcl" aria-label="বন্ধ করুন">×</button></div><div id="dsum"></div><ul id="dlist"></ul><button class="add" id="dadd" type="button">এই ব্যক্তির নতুন লেনদেন যোগ করুন</button></div></div>
 <div id="sheet" hidden><div class="sh"><div class="shh"><h2>লেনদেনের তালিকা</h2><button type="button" id="cl" aria-label="বন্ধ করুন">×</button></div><ul id="list"></ul></div></div>
 <script>
 var firebaseConfig={
@@ -172,17 +193,50 @@ $("lf").onsubmit=function(e){e.preventDefault();msg("");var em=$("em").value.tri
 $("fg").onclick=function(){var em=$("em").value.trim();if(!em){msg("আগে উপরে ইমেইল লিখুন");return}
  auth.sendPasswordResetEmail(em).then(function(){msg("পাসওয়ার্ড বদলের লিংক ইমেইলে পাঠানো হয়েছে")}).catch(err)};
 $("lk").onclick=function(){auth.signOut()};
-function showLock(){document.body.className="locked";$("sheet").hidden=true;$("p1").value="";mode(false);startWall()}
+function showLock(){document.body.className="locked";$("sheet").hidden=true;$("dsheet").hidden=true;tab(1);$("p1").value="";mode(false);startWall()}
+var dref=null,debts=[],pcache=[],curP=null;
+var DT={lend:{l:"ধার দিলাম",s:1},recv:{l:"ফেরত পেলাম",s:-1},borrow:{l:"ধার নিলাম",s:-1},repay:{l:"ফেরত দিলাম",s:1}};
+$("dd").value=today();
+function tab(n){$("v1").hidden=n!=1;$("v2").hidden=n!=2;$("t1").className=n==1?"on":"";$("t2").className=n==2?"on":"";$("month").style.display=n==1?"":"none"}
+$("t1").onclick=function(){tab(1)};$("t2").onclick=function(){tab(2)};
+function renderD(){
+ var by={},get=0,owe=0;
+ debts.forEach(function(x){if(!DT[x.kind])return;var p=by[x.name]=by[x.name]||{name:x.name,net:0,rows:[]};p.net+=DT[x.kind].s*x.amt;p.rows.push(x)});
+ var ps=Object.keys(by).map(function(k){var p=by[k];p.net=Math.round(p.net*100)/100;return p}).sort(function(a,b){return Math.abs(b.net)-Math.abs(a.net)});
+ ps.forEach(function(p){if(p.net>0)get+=p.net;else owe-=p.net});
+ pcache=ps;var n=get-owe;
+ $("dget").textContent=tk(get);$("dowe").textContent=tk(owe);$("dbal").textContent=(n<0?"−":"")+tk(Math.abs(n));
+ $("dnames").innerHTML=ps.map(function(p){return '<option value="'+esc(p.name)+'">'}).join("");
+ $("plist").innerHTML=ps.length?ps.map(function(p,i){var c=p.net>0?"in":p.net<0?"ex":"";var t=p.net>0?"পাব "+tk(p.net):p.net<0?"দেব "+tk(-p.net):"মিটে গেছে";return '<li class="pl '+c+'" data-i="'+i+'"><div class="t">'+esc(p.name)+'<span>'+bn(p.rows.length)+' টি লেনদেন</span></div><div class="a" style="'+(c?"":"color:var(--mute)")+'">'+t+'</div><i>›</i></li>'}).join(""):'<div class="empty">কোনো দেনা-পাওনা নেই। উপরে প্রথম হিসাবটি যোগ করুন।</div>';
+ if(!$("dsheet").hidden)drawP()}
+function openP(name){curP=name;$("dsheet").hidden=false;drawP()}
+function drawP(){
+ var p=pcache.filter(function(x){return x.name===curP})[0];
+ if(!p){$("dsheet").hidden=true;return}
+ $("dtitle").textContent=p.name;
+ $("dsum").textContent=p.net>0?"আপনি পাবেন "+tk(p.net):p.net<0?"আপনি দেবেন "+tk(-p.net):"হিসাব মিটে গেছে";
+ var rows=p.rows.slice().sort(function(a,b){return b.date.localeCompare(a.date)||(b.ts||0)-(a.ts||0)});
+ $("dlist").innerHTML=rows.map(function(x){var out=x.kind=="lend"||x.kind=="repay";var d=new Date(x.date+"T00:00:00").toLocaleDateString("bn-BD",{day:"numeric",month:"long",year:"numeric"});return '<li class="'+(out?"ex":"in")+'"><div class="t">'+DT[x.kind].l+'<span>'+d+(x.note?" — "+esc(x.note):"")+'</span></div><div class="a">'+(out?"−":"+")+tk(x.amt)+'</div><button data-id="'+esc(x.id)+'" aria-label="মুছে ফেলুন">×</button></li>'}).join("")}
+$("plist").onclick=function(e){var li=e.target.closest&&e.target.closest("li[data-i]");if(li)openP(pcache[+li.getAttribute("data-i")].name)};
+$("dlist").onclick=function(e){var id=e.target.getAttribute&&e.target.getAttribute("data-id");if(id&&dref&&confirm("এই লেনদেনটি মুছে ফেলবেন?"))dref.child(id).remove()};
+$("dcl").onclick=function(){$("dsheet").hidden=true};
+$("dsheet").onclick=function(e){if(e.target===this)this.hidden=true};
+$("dadd").onclick=function(){$("dn").value=curP||"";$("dsheet").hidden=true;$("dn").scrollIntoView({block:"center"});$("da").focus()};
+$("df").onsubmit=function(e){e.preventDefault();var a=parseFloat($("da").value),n=$("dn").value.trim().replace(/\s+/g," ");if(!(a>0)||!n||!dref)return;
+ dref.push({name:n,kind:$("dk").value,amt:a,date:$("dd").value,note:$("dnote").value.trim(),ts:Date.now()});
+ $("dn").value="";$("da").value="";$("dnote").value=""};
 $("open").onclick=function(){$("sheet").hidden=false};
 $("cl").onclick=function(){$("sheet").hidden=true};
 $("sheet").onclick=function(e){if(e.target===this)this.hidden=true};
 addEventListener("keydown",function(e){if(e.key==="Escape")$("sheet").hidden=true});
 auth.onAuthStateChanged(function(u){
- if(uref){uref.off();uref=null}
+ if(uref){uref.off();uref=null}if(dref){dref.off();dref=null}
  if(u){document.body.className="";stopWall();
   uref=db.ref("users/"+u.uid+"/tx");
+  dref=db.ref("users/"+u.uid+"/debts");
+  dref.on("value",function(s){var v=s.val()||{};debts=Object.keys(v).map(function(k){var x=v[k];x.id=k;return x});renderD()},function(){$("plist").innerHTML='<div class="empty">ডাটা পড়তে সমস্যা হয়েছে</div>'});
   uref.on("value",function(s){var v=s.val()||{};data=Object.keys(v).map(function(k){var x=v[k];x.id=k;return x});render()},function(){$("list").innerHTML='<div class="empty">ডাটা পড়তে সমস্যা হয়েছে, ইন্টারনেট ও রুলস পরীক্ষা করুন</div>'});
- }else{data=[];render();showLock()}
+ }else{data=[];debts=[];render();renderD();showLock()}
 });
 </script>
 </body>
