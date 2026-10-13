@@ -84,6 +84,7 @@ body.locked #lock{display:flex}
 .pl{cursor:pointer}.pl i{font-style:normal;font-size:24px;color:var(--mute)}
 #dsum{padding:10px 16px 0;color:var(--mute)}
 #dadd{margin:0 16px 16px}
+#le:not(:empty){background:rgba(255,255,255,.16);padding:8px 10px;border-radius:10px;color:#fff}
 </style>
 </head>
 <body class="locked">
@@ -186,13 +187,15 @@ addEventListener("resize",function(){if(document.body.className=="locked")size()
 
 function msg(t){$("le").textContent=t}
 function err(e){var c=e&&e.code,m={"auth/invalid-credential":"ইমেইল বা পাসওয়ার্ড ভুল হয়েছে","auth/wrong-password":"ইমেইল বা পাসওয়ার্ড ভুল হয়েছে","auth/user-not-found":"ইমেইল বা পাসওয়ার্ড ভুল হয়েছে","auth/email-already-in-use":"এই ইমেইলে আগেই অ্যাকাউন্ট আছে, লগইন করুন","auth/weak-password":"পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের দিন","auth/invalid-email":"ইমেইল ঠিকমতো লিখুন","auth/network-request-failed":"ইন্টারনেট সংযোগ পরীক্ষা করুন","auth/too-many-requests":"অনেকবার চেষ্টা হয়েছে, কিছুক্ষণ পরে আবার করুন"};
- msg(m[c]||"সমস্যা হয়েছে, আবার চেষ্টা করুন")}
+ msg(m[c]||"সমস্যা হয়েছে, আবার চেষ্টা করুন"+(c?" ("+c+")":""))}
 function mode(s){signup=s;$("lt").textContent=s?"নতুন অ্যাকাউন্ট":"লগইন করুন";$("ls").textContent=s?"ইমেইল ও একটি পাসওয়ার্ড দিয়ে অ্যাকাউন্ট খুলুন":"আপনার হিসাব দেখতে ইমেইল ও পাসওয়ার্ড দিন";$("lb").textContent=s?"অ্যাকাউন্ট খুলুন":"লগইন";$("sw").textContent=s?"আগে থেকেই অ্যাকাউন্ট আছে? লগইন করুন":"নতুন অ্যাকাউন্ট খুলুন";$("fg").style.display=s?"none":"block";$("p1").autocomplete=s?"new-password":"current-password";msg("")}
 $("sw").onclick=function(){mode(!signup)};
 $("lf").onsubmit=function(e){e.preventDefault();msg("");var em=$("em").value.trim(),pw=$("p1").value;$("lb").disabled=true;
  (signup?auth.createUserWithEmailAndPassword(em,pw):auth.signInWithEmailAndPassword(em,pw)).catch(err).then(function(){$("lb").disabled=false})};
-$("fg").onclick=function(){var em=$("em").value.trim();if(!em){msg("আগে উপরে ইমেইল লিখুন");return}
- auth.sendPasswordResetEmail(em).then(function(){msg("পাসওয়ার্ড বদলের লিংক ইমেইলে পাঠানো হয়েছে")}).catch(err)};
+$("fg").onclick=function(){var em=$("em").value.trim();
+ if(!em){msg("আগে উপরের ঘরে আপনার ইমেইল লিখুন, তারপর এখানে চাপুন");$("em").focus();return}
+ msg("পাঠানো হচ্ছে…");
+ auth.sendPasswordResetEmail(em).then(function(){msg("লিংক পাঠানো হয়েছে। ইমেইলের ইনবক্স ও স্প্যাম ফোল্ডার দেখুন")}).catch(function(e){if(e&&e.code=="auth/user-not-found")msg("এই ইমেইলে কোনো অ্যাকাউন্ট পাওয়া যায়নি");else err(e)})};
 $("lk").onclick=function(){auth.signOut()};
 function showLock(){document.body.className="locked";$("sheet").hidden=true;$("psheet").hidden=true;$("dsheet").hidden=true;tab(1);$("p1").value="";mode(false);startWall()}
 var dref=null,debts=[],pcache=[],curP=null;
