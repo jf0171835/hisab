@@ -57,17 +57,6 @@ li button{border:0;background:none;color:var(--mute);font-size:20px;cursor:point
 .lkb{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:0 12px;cursor:pointer}
 body.locked main{display:none}
 body.locked{overflow:hidden}
-#lock{display:none;position:fixed;inset:0;z-index:10;align-items:center;justify-content:center;padding:20px;background:#06201c}
-body.locked #lock{display:flex}
-#wall{position:absolute;inset:0;width:100%;height:100%}
-.box{position:relative;width:100%;max-width:340px;padding:28px 22px;border-radius:24px;background:rgba(255,255,255,.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.25);color:#fff;text-align:center}
-.box input{color:#14302b;background:rgba(255,255,255,.92);text-align:center}
-.box p{margin:0 0 4px;opacity:.85;font-size:14px}
-.box h2{font-size:24px;margin:0}
-.lg{font-size:40px}
-#le{min-height:22px;color:#ffd0b8;font-size:14px}
-.lnk{background:none;border:0;color:#fff;opacity:.8;text-decoration:underline;cursor:pointer;font-size:14px}
-.lnk{display:block;margin:8px auto 0}
 .lkb{font-size:14px}
 .lbox{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--card);cursor:pointer}
 .lbox span{display:block}.lbox b{font-size:17px}.lbox small{display:block;color:var(--mute)}.lbox i{font-style:normal;font-size:28px;color:var(--mute)}
@@ -84,13 +73,77 @@ body.locked #lock{display:flex}
 .pl{cursor:pointer}.pl i{font-style:normal;font-size:24px;color:var(--mute)}
 #dsum{padding:10px 16px 0;color:var(--mute)}
 #dadd{margin:0 16px 16px}
-#le:not(:empty){background:rgba(255,255,255,.16);padding:8px 10px;border-radius:10px;color:#fff}
+#dq{margin:12px 16px 0}#dq label{color:var(--mute);font-size:14px}
+.lnk2{background:none;border:0;color:var(--acc);text-align:left;padding:0;cursor:pointer;font-size:14px;font-weight:600}
+
+#lock{display:none;position:fixed;inset:0;z-index:10;overflow-y:auto;background:linear-gradient(180deg,#d6c8f5 0%,#c4b1ed 55%,#b5a0e4 100%);color:#33236f}
+body.locked #lock{display:block}
+.scene{--cw:clamp(84px,27vw,120px);position:relative;display:flex;flex-direction:column;justify-content:center;width:100%;max-width:460px;min-height:100%;margin:0 auto;padding:88px 26px 48px 12px;overflow:hidden;z-index:0}
+.stage{position:relative;padding-bottom:78px}
+.cloud{position:absolute;display:block;background:#fff8f3;border-radius:40px;box-shadow:inset -4px -6px 10px rgba(180,160,220,.3),0 6px 14px rgba(120,90,190,.18);animation:drift 14s ease-in-out infinite alternate}
+.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%;box-shadow:inherit}
+.c1{left:8px;top:34px;width:74px;height:26px}.c1:before{width:38px;height:38px;left:12px;top:-20px}.c1:after{width:28px;height:28px;left:40px;top:-12px}
+.c2{right:84px;top:16px;width:64px;height:22px;animation-delay:-6s}.c2:before{width:32px;height:32px;left:10px;top:-16px}.c2:after{width:24px;height:24px;left:34px;top:-10px}
+@keyframes drift{from{transform:translateX(-7px)}to{transform:translateX(11px)}}
+@keyframes glow{from{opacity:.5}to{opacity:1}}
+.lamp{position:absolute;right:6px;top:-4px;width:54px;height:118px;z-index:5}
+.glow{animation:glow 3s ease-in-out infinite alternate}
+.plat{position:absolute;left:-14%;right:-14%;bottom:-26px;height:140px;border-radius:50%;background:radial-gradient(ellipse at 50% 25%,#e6dcfb 0%,#d4c6f4 65%,#c9b9ef 100%);box-shadow:inset 0 6px 14px rgba(255,255,255,.45),0 -4px 14px rgba(110,80,190,.18);z-index:0}
+.plant{position:absolute;z-index:1}
+.pl-l{left:-8px;bottom:84px;width:64px}
+.pl-r{right:-14px;bottom:46px;width:62px;z-index:3}
+.wrap{position:relative;margin-left:calc(var(--cw) - 14px);z-index:2}
+.wrap>svg{position:absolute}
+.shelf{right:-36px;top:70px;width:64px;height:220px;z-index:0}
+.girl{position:absolute;left:-2px;bottom:50px;width:calc(var(--cw) + 20px);height:auto;z-index:4;filter:drop-shadow(0 6px 6px rgba(80,50,150,.22))}
+.box{position:relative;z-index:1;margin:0;padding:26px 18px 22px 30px;border:0;border-radius:30px;background:linear-gradient(160deg,#fffdfb,#f4eefc);box-shadow:0 20px 32px rgba(96,70,170,.3),inset 0 -6px 12px rgba(180,160,230,.28),inset 0 3px 6px #fff;display:flex;flex-direction:column;gap:12px;text-align:center}
+.appic{width:76px;height:76px;align-self:center;filter:drop-shadow(0 8px 8px rgba(110,80,200,.35))}
+.box h2{margin:2px 0 0;font-size:26px;font-weight:700;color:#33236f;line-height:1.3}
+.box p{margin:-6px 0 4px;font-size:14px;color:#8f84b8}
+.fld{display:flex;align-items:center;gap:10px;background:#f1ecfb;border-radius:999px;padding:0 14px;height:48px;box-shadow:inset 0 2px 5px rgba(150,130,200,.28),0 2px 0 #fff}
+.fld:focus-within{box-shadow:inset 0 2px 5px rgba(150,130,200,.28),0 0 0 2px #a88cf0}
+.fld>svg{flex:none;width:20px;height:20px;fill:#7b66c4}
+.fld input,.fld input:focus-visible{flex:1;min-width:0;width:auto;height:100%;padding:0;border:0;border-radius:0;background:none;color:#33236f;font-size:15px;outline:none;box-shadow:none}
+.fld input::placeholder{color:#a79bd0}
+.eye{flex:none;border:0;background:none;padding:2px;cursor:pointer;color:#7b66c4;line-height:0}
+.eye svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.eye.show .sl{display:none}
+.box .add{height:50px;padding:0;border:0;border-radius:999px;background:linear-gradient(180deg,#bba5f5,#9a81e6);color:#fff;font-size:17px;font-weight:700;box-shadow:0 8px 14px rgba(124,92,214,.4),inset 0 2px 3px rgba(255,255,255,.55);cursor:pointer}
+.box .add:disabled{opacity:.7}
+.lnk{background:none;border:0;padding:2px 0;cursor:pointer;font-size:14px;color:#6f58c4}
+#fg{align-self:flex-end;margin-top:-4px;font-size:13px;font-weight:600;text-align:right}
+#sw{color:#6e6399}#sw b{color:#6f58c4}
+#sk{color:#8c80b4;text-decoration:underline}
+#le{font-size:13px;color:#d0456f}#le:empty{display:none}
+@media (prefers-reduced-motion:reduce){.cloud,.glow{animation:none}}
 </style>
 </head>
 <body class="locked">
-<div id="lock"><canvas id="wall"></canvas><form class="box" id="lf"><div class="lg">💰</div><h2 id="lt">লগইন করুন</h2><p id="ls">আপনার হিসাব দেখতে ইমেইল ও পাসওয়ার্ড দিন</p><input type="email" id="em" placeholder="ইমেইল" autocomplete="email" required><input type="password" id="p1" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" autocomplete="current-password" required minlength="6"><button class="add" id="lb" type="submit">লগইন</button><div id="le" role="alert"></div><button type="button" id="sw" class="lnk">নতুন অ্যাকাউন্ট খুলুন</button><button type="button" id="fg" class="lnk">পাসওয়ার্ড ভুলে গেছেন?</button></form></div>
+<div id="lock"><div class="scene">
+<i class="cloud c1"></i><i class="cloud c2"></i>
+<svg class="lamp" viewBox="0 0 54 118"><defs><linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9a2f4"/><stop offset="1" stop-color="#9478e2"/></linearGradient><radialGradient id="lg2"><stop offset="0" stop-color="#fff3b8" stop-opacity=".95"/><stop offset="1" stop-color="#fff3b8" stop-opacity="0"/></radialGradient></defs><rect x="25.5" y="0" width="3" height="46" fill="#a58bec"/><path d="M6 78c0-22 10-34 21-34s21 12 21 34z" fill="url(#lg1)"/><ellipse cx="27" cy="79" rx="22" ry="5" fill="#8466d6"/><ellipse class="glow" cx="27" cy="92" rx="26" ry="22" fill="url(#lg2)"/><ellipse cx="27" cy="83" rx="7" ry="4.5" fill="#ffe88a"/></svg>
+<div class="stage">
+<svg class="plant pl-l" viewBox="0 0 70 130"><path d="M35 94C10 76 6 36 26 8c12 22 18 52 9 86z" fill="#69a96b"/><path d="M36 94C44 66 54 44 68 34c4 26-8 46-32 60z" fill="#82bd7b"/><path d="M34 96C22 82 8 78 2 66c14-2 28 6 32 30z" fill="#5c9b60"/><path d="M14 94h42l-5 34H19z" fill="#b99ee8"/><rect x="11" y="88" width="48" height="10" rx="5" fill="#c7b0f2"/></svg>
+<div class="plat"></div>
+<div class="wrap">
+<svg class="shelf" viewBox="0 0 64 220"><rect x="31" y="16" width="10" height="54" rx="2" fill="#f5a8c8"/><rect x="42" y="24" width="9" height="46" rx="2" fill="#8db4ef"/><rect x="52" y="20" width="11" height="50" rx="2" fill="#f6d36c"/><rect x="24" y="70" width="40" height="8" rx="3" fill="#e7b06d"/><path d="M33 152l5-16 6 12zM60 152l-5-16-6 12z" fill="#f09ab5"/><ellipse cx="47" cy="178" rx="17" ry="20" fill="#f7a8bf"/><circle cx="47" cy="166" r="16" fill="#f9b5c9"/><circle cx="41" cy="166" r="2.2" fill="#5b3822"/><circle cx="53" cy="166" r="2.2" fill="#5b3822"/><circle cx="37" cy="172" r="3.4" fill="#f58aa8" opacity=".7"/><circle cx="57" cy="172" r="3.4" fill="#f58aa8" opacity=".7"/><path d="M44 172q3 3 6 0" fill="none" stroke="#b5566f" stroke-width="1.4" stroke-linecap="round"/><rect x="24" y="198" width="40" height="8" rx="3" fill="#e7b06d"/></svg>
+<form class="box" id="lf">
+<svg class="appic" viewBox="0 0 80 80"><defs><linearGradient id="gi" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bda7f6"/><stop offset="1" stop-color="#8d72df"/></linearGradient></defs><rect x="4" y="4" width="72" height="72" rx="22" fill="url(#gi)"/><rect x="5" y="5" width="70" height="70" rx="21" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2"/><text x="38" y="56" text-anchor="middle" font-size="46" font-weight="700" fill="#fff" font-family="Hind Siliguri,sans-serif">৳</text><path d="M63 22l2.3 4.8 5.2.7-3.8 3.7.9 5.2-4.6-2.5-4.6 2.5.9-5.2-3.8-3.7 5.2-.7z" fill="#ffd96a"/><path d="M62 56l1.5 3.1 3.4.5-2.5 2.4.6 3.4-3-1.6-3 1.6.6-3.4-2.5-2.4 3.4-.5z" fill="#f4a3c4"/></svg>
+<h2 id="lt">স্বাগতম!</h2><p id="ls">চালিয়ে যেতে লগইন করুন</p>
+<div class="fld" id="fe"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.2"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg><input type="email" id="em" placeholder="ইমেইল" autocomplete="email" required></div>
+<div class="fld" id="f1"><svg viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="11" rx="3"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" fill="none" stroke="#7b66c4" stroke-width="2"/></svg><input type="password" id="p1" placeholder="পাসওয়ার্ড" autocomplete="current-password" required minlength="6"><button type="button" class="eye" data-t="p1" aria-label="পাসওয়ার্ড দেখুন"><svg viewBox="0 0 24 24"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/><path class="sl" d="M4 4l16 16"/></svg></button></div>
+<div class="fld" id="f2" style="display:none"><svg viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="11" rx="3"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" fill="none" stroke="#7b66c4" stroke-width="2"/></svg><input type="password" id="p2" placeholder="আবার পাসওয়ার্ড দিন" autocomplete="new-password"><button type="button" class="eye" data-t="p2" aria-label="পাসওয়ার্ড দেখুন"><svg viewBox="0 0 24 24"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/><path class="sl" d="M4 4l16 16"/></svg></button></div>
+<button type="button" id="fg" class="lnk">পাসওয়ার্ড ভুলে গেছেন?</button>
+<div id="le" role="alert"></div>
+<button class="add" id="lb" type="submit">লগইন</button>
+<button type="button" id="sw" class="lnk">অ্যাকাউন্ট নেই? <b>নতুন অ্যাকাউন্ট খুলুন</b></button>
+<button type="button" id="sk" class="lnk" style="display:none">এখন না, পরে করব</button>
+</form></div>
+<svg class="girl" viewBox="0 0 132 270"><ellipse cx="58" cy="262" rx="50" ry="6" fill="rgba(90,60,160,.18)"/><path d="M26 118Q12 150 18 182" stroke="#b8a2f2" stroke-width="17" stroke-linecap="round" fill="none"/><circle cx="19" cy="186" r="8" fill="#ffdcc4"/><path d="M28 190H90l4 55H66l-8-30-8 30H24z" fill="#f8f3ff" stroke="#e3d9f4" stroke-width="1.5"/><ellipse cx="38" cy="253" rx="17" ry="9" fill="#c5b1f6"/><ellipse cx="38" cy="261" rx="18" ry="5" fill="#fff"/><ellipse cx="82" cy="253" rx="17" ry="9" fill="#c5b1f6"/><ellipse cx="82" cy="261" rx="18" ry="5" fill="#fff"/><path d="M22 112Q18 160 28 194H90Q100 160 94 118Q58 100 22 112z" fill="#b8a2f2"/><path d="M38 172Q58 180 80 172" fill="none" stroke="#a48cea" stroke-width="2"/><ellipse cx="58" cy="104" rx="30" ry="12" fill="#a68ee6"/><path d="M90 120Q108 128 112 150" stroke="#b8a2f2" stroke-width="17" stroke-linecap="round" fill="none"/><circle cx="113" cy="154" r="8.5" fill="#ffdcc4"/><path d="M50 104l-2 34M66 104l2 32" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="48" cy="140" r="2.5" fill="#fff"/><circle cx="68" cy="138" r="2.5" fill="#fff"/><circle cx="38" cy="14" r="15" fill="#8b5a35"/><ellipse cx="40" cy="26" rx="10" ry="4" fill="#c9b4f5"/><ellipse cx="58" cy="54" rx="40" ry="40" fill="#8b5a35"/><ellipse cx="58" cy="64" rx="34" ry="32" fill="#ffdcc4"/><path d="M22 60Q26 22 58 22Q92 22 94 60Q80 38 58 40Q36 38 22 60z" fill="#8b5a35"/><path d="M24 58Q20 84 28 96Q31 74 31 60z" fill="#8b5a35"/><path d="M92 58Q96 84 88 96Q85 74 85 60z" fill="#8b5a35"/><ellipse cx="44" cy="68" rx="7" ry="9" fill="#5b3822"/><ellipse cx="72" cy="68" rx="7" ry="9" fill="#5b3822"/><ellipse cx="44" cy="70" rx="4" ry="5" fill="#8a5a36"/><ellipse cx="72" cy="70" rx="4" ry="5" fill="#8a5a36"/><circle cx="46.5" cy="64" r="2.6" fill="#fff"/><circle cx="74.5" cy="64" r="2.6" fill="#fff"/><path d="M38 55q6-4 12-1M66 54q6-3 12 1" fill="none" stroke="#7a4a2a" stroke-width="1.8" stroke-linecap="round"/><ellipse cx="33" cy="80" rx="6" ry="4" fill="#ffa8a0" opacity=".55"/><ellipse cx="83" cy="80" rx="6" ry="4" fill="#ffa8a0" opacity=".55"/><path d="M52 84Q58 91 64 84" fill="#fff" stroke="#c4655a" stroke-width="1.8" stroke-linejoin="round"/></svg>
+<svg class="plant pl-r" viewBox="0 0 70 120"><path d="M35 70C14 58 12 30 28 8c9 16 14 38 7 62z" fill="#69a96b"/><path d="M36 70C42 50 52 36 64 30c2 20-8 34-28 40z" fill="#82bd7b"/><path d="M14 68h42l-5 24H19z" fill="#b99ee8"/><rect x="11" y="63" width="48" height="9" rx="4.5" fill="#c7b0f2"/><path d="M18 94h34l6 24h-6l-5-14H23l-5 14h-6z" fill="#e0a66b"/></svg>
+</div></div></div>
 <main>
-<header><h1>আমার হিসাব</h1><div class="hd"><input class="month" type="month" id="month" aria-label="মাস বাছাই করুন"><button type="button" id="lk" class="lkb" aria-label="লগ আউট">বের হন</button></div></header>
+<header><h1>আমার হিসাব</h1><div class="hd"><input class="month" type="month" id="month" aria-label="মাস বাছাই করুন"><button type="button" id="lkset" class="lkb" aria-label="অ্যাপ লক">🔒</button><button type="button" id="lk" class="lkb" aria-label="লগ আউট">বের হন</button></div></header>
 <div class="tabs"><button type="button" id="t1" class="on">আয়-ব্যয়</button><button type="button" id="t2">দেনা-পাওনা</button></div>
 <div id="v1">
 
@@ -127,7 +180,8 @@ body.locked #lock{display:flex}
 </div>
 </main>
 <div id="psheet" hidden><div class="sh"><div class="shh"><h2>ব্যক্তি অনুযায়ী হিসাব</h2><button type="button" id="pcl" aria-label="বন্ধ করুন">×</button></div><ul id="plist"></ul></div></div>
-<div id="dsheet" hidden><div class="sh"><div class="shh"><h2 id="dtitle"></h2><button type="button" id="dcl" aria-label="বন্ধ করুন">×</button></div><div id="dsum"></div><ul id="dlist"></ul><button class="add" id="dadd" type="button">এই ব্যক্তির নতুন লেনদেন যোগ করুন</button></div></div>
+<div id="dsheet" hidden><div class="sh"><div class="shh"><h2 id="dtitle"></h2><button type="button" id="dcl" aria-label="বন্ধ করুন">×</button></div><div id="dsum"></div>
+<form id="dq" hidden><label id="dql"></label><div class="row"><input type="number" id="dqa" min="1" step="any" inputmode="decimal" placeholder="টাকার পরিমাণ" required><button class="add" id="dqb" type="submit"></button></div><button type="button" id="dqf" class="lnk2"></button></form><ul id="dlist"></ul><button class="add" id="dadd" type="button">এই ব্যক্তির নতুন লেনদেন যোগ করুন</button></div></div>
 <div id="sheet" hidden><div class="sh"><div class="shh"><h2>লেনদেনের তালিকা</h2><button type="button" id="cl" aria-label="বন্ধ করুন">×</button></div><ul id="list"></ul></div></div>
 <script>
 var firebaseConfig={
@@ -169,35 +223,49 @@ $("list").onclick=function(e){var id=e.target.getAttribute&&e.target.getAttribut
 $("month").onchange=render;
 setType("in");render();
 
-var wall=$("wall"),cx=wall.getContext("2d"),raf=0,W=0,H=0,rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
-var orbs=[[.2,.3,.55,160,.00021],[.8,.25,.5,45,.00017],[.5,.8,.6,190,.00025],[.15,.85,.4,140,.00019],[.85,.75,.45,170,.00023]];
-var stars=[];for(var i=0;i<60;i++)stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.4,s:Math.random()*.00006+.00003,p:Math.random()*6});
-function size(){var d=window.devicePixelRatio||1;W=innerWidth;H=innerHeight;wall.width=W*d;wall.height=H*d;cx.setTransform(d,0,0,d,0,0)}
-function frame(t){
- cx.globalCompositeOperation="source-over";cx.fillStyle="#06201c";cx.fillRect(0,0,W,H);
- cx.globalCompositeOperation="lighter";
- orbs.forEach(function(o,i){var x=(o[0]+Math.sin(t*o[4]+i)*.18)*W,y=(o[1]+Math.cos(t*o[4]*1.3+i*2)*.15)*H,r=o[2]*Math.max(W,H)*.7;
-  var g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,"hsla("+o[3]+",80%,45%,.45)");g.addColorStop(1,"hsla("+o[3]+",80%,45%,0)");cx.fillStyle=g;cx.fillRect(0,0,W,H)});
- stars.forEach(function(s){var y=((s.y-t*s.s)%1+1)%1;cx.globalAlpha=.35+.35*Math.sin(t*.002+s.p);cx.fillStyle="#fff";cx.beginPath();cx.arc(s.x*W,y*H,s.r,0,6.283);cx.fill()});
- cx.globalAlpha=1;
- if(!rm)raf=requestAnimationFrame(frame)}
-function startWall(){size();cancelAnimationFrame(raf);frame(performance.now())}
-function stopWall(){cancelAnimationFrame(raf)}
-addEventListener("resize",function(){if(document.body.className=="locked")size()});
-
+function startWall(){}function stopWall(){}
 function msg(t){$("le").textContent=t}
 function err(e){var c=e&&e.code,m={"auth/invalid-credential":"ইমেইল বা পাসওয়ার্ড ভুল হয়েছে","auth/wrong-password":"ইমেইল বা পাসওয়ার্ড ভুল হয়েছে","auth/user-not-found":"ইমেইল বা পাসওয়ার্ড ভুল হয়েছে","auth/email-already-in-use":"এই ইমেইলে আগেই অ্যাকাউন্ট আছে, লগইন করুন","auth/weak-password":"পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের দিন","auth/invalid-email":"ইমেইল ঠিকমতো লিখুন","auth/network-request-failed":"ইন্টারনেট সংযোগ পরীক্ষা করুন","auth/too-many-requests":"অনেকবার চেষ্টা হয়েছে, কিছুক্ষণ পরে আবার করুন"};
  msg(m[c]||"সমস্যা হয়েছে, আবার চেষ্টা করুন"+(c?" ("+c+")":""))}
-function mode(s){signup=s;$("lt").textContent=s?"নতুন অ্যাকাউন্ট":"লগইন করুন";$("ls").textContent=s?"ইমেইল ও একটি পাসওয়ার্ড দিয়ে অ্যাকাউন্ট খুলুন":"আপনার হিসাব দেখতে ইমেইল ও পাসওয়ার্ড দিন";$("lb").textContent=s?"অ্যাকাউন্ট খুলুন":"লগইন";$("sw").textContent=s?"আগে থেকেই অ্যাকাউন্ট আছে? লগইন করুন":"নতুন অ্যাকাউন্ট খুলুন";$("fg").style.display=s?"none":"block";$("p1").autocomplete=s?"new-password":"current-password";msg("")}
-$("sw").onclick=function(){mode(!signup)};
-$("lf").onsubmit=function(e){e.preventDefault();msg("");var em=$("em").value.trim(),pw=$("p1").value;$("lb").disabled=true;
- (signup?auth.createUserWithEmailAndPassword(em,pw):auth.signInWithEmailAndPassword(em,pw)).catch(err).then(function(){$("lb").disabled=false})};
-$("fg").onclick=function(){var em=$("em").value.trim();
+var curUser=null,lm="login";
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
+function getLk(){return curUser?lsGet("hisab-lock-"+curUser.uid):null}
+function setLk(h){lsSet("hisab-lock-"+curUser.uid,h)}
+function skipped(){return !!curUser&&lsGet("hisab-lockskip-"+curUser.uid)=="1"}
+function enter(){document.body.className="";stopWall()}
+function doLogout(){if(curUser){lsDel("hisab-lock-"+curUser.uid);lsDel("hisab-lockskip-"+curUser.uid)}auth.signOut()}
+function hashPw(pw){var enc=new TextEncoder().encode("hisab:"+curUser.uid+":"+pw);
+ if(window.crypto&&crypto.subtle)return crypto.subtle.digest("SHA-256",enc).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")});
+ var h=5381;for(var i=0;i<enc.length;i++)h=((h<<5)+h+enc[i])>>>0;return Promise.resolve("s"+h)}
+function mode(m){lm=m;var un=m=="unlock",sl=m=="setlock",au=m=="login"||m=="signup";
+ var T={login:["স্বাগতম!","চালিয়ে যেতে লগইন করুন","লগইন"],signup:["নতুন অ্যাকাউন্ট","ইমেইল ও কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন","অ্যাকাউন্ট খুলুন"],unlock:["স্বাগতম!","চালিয়ে যেতে অ্যাপ পাসওয়ার্ড দিন","খুলুন"],setlock:["পাসওয়ার্ড সেট করুন","কমপক্ষে ৪ অক্ষর, অ্যাপ খুললেই এটা লাগবে","পাসওয়ার্ড সেট করুন"]}[m];
+ $("lt").textContent=T[0];$("ls").textContent=T[1];$("lb").textContent=T[2];
+ $("fe").style.display=au?"flex":"none";$("em").required=au;
+ $("f2").style.display=sl?"flex":"none";$("p2").required=sl;
+ $("p1").minLength=au?(m=="signup"?6:1):(sl?4:1);
+ $("p1").placeholder=un?"অ্যাপ পাসওয়ার্ড":sl?"নতুন পাসওয়ার্ড":"পাসওয়ার্ড";
+ $("p1").autocomplete=sl||m=="signup"?"new-password":un?"off":"current-password";
+ $("sw").style.display=au?"block":"none";$("sw").innerHTML=m=="signup"?"আগে থেকেই অ্যাকাউন্ট আছে? <b>লগইন করুন</b>":"অ্যাকাউন্ট নেই? <b>নতুন অ্যাকাউন্ট খুলুন</b>";
+ $("fg").style.display=sl||m=="signup"?"none":"block";$("fg").textContent=un?"ভুলে গেছেন বা বদলাতে চান? লগ আউট করুন":"পাসওয়ার্ড ভুলে গেছেন?";
+ $("sk").style.display=sl?"block":"none";
+ $("p1").value="";$("p2").value="";$("p1").type="password";$("p2").type="password";document.querySelectorAll(".eye").forEach(function(b){b.classList.remove("show")});msg("")}
+document.querySelectorAll(".eye").forEach(function(b){b.onclick=function(){var i=$(b.getAttribute("data-t")),sh=i.type=="password";i.type=sh?"text":"password";b.classList.toggle("show",sh)}});
+$("sw").onclick=function(){mode(lm=="signup"?"login":"signup")};
+$("sk").onclick=function(){if(curUser)lsSet("hisab-lockskip-"+curUser.uid,"1");enter()};
+$("lf").onsubmit=function(e){e.preventDefault();msg("");var pw=$("p1").value;
+ if(lm=="unlock"){hashPw(pw).then(function(h){if(h===getLk())enter();else{msg("পাসওয়ার্ড ভুল হয়েছে, আবার চেষ্টা করুন");$("p1").value="";$("p1").focus()}});return}
+ if(lm=="setlock"){if(pw.length<4){msg("কমপক্ষে ৪ অক্ষরের পাসওয়ার্ড দিন");return}if(pw!==$("p2").value){msg("দুটি পাসওয়ার্ড মিলছে না");return}hashPw(pw).then(function(h){setLk(h);enter()});return}
+ var em=$("em").value.trim();$("lb").disabled=true;
+ (lm=="signup"?auth.createUserWithEmailAndPassword(em,pw):auth.signInWithEmailAndPassword(em,pw)).catch(err).then(function(){$("lb").disabled=false})};
+$("fg").onclick=function(){if(lm=="unlock"){if(confirm("লগ আউট করলে অ্যাপ পাসওয়ার্ড মুছে যাবে এবং আবার ইমেইল-পাসওয়ার্ড দিয়ে লগইন করতে হবে। চালিয়ে যাবেন?"))doLogout();return}var em=$("em").value.trim();
  if(!em){msg("আগে উপরের ঘরে আপনার ইমেইল লিখুন, তারপর এখানে চাপুন");$("em").focus();return}
  msg("পাঠানো হচ্ছে…");
  auth.sendPasswordResetEmail(em).then(function(){msg("লিংক পাঠানো হয়েছে। ইমেইলের ইনবক্স ও স্প্যাম ফোল্ডার দেখুন")}).catch(function(e){if(e&&e.code=="auth/user-not-found")msg("এই ইমেইলে কোনো অ্যাকাউন্ট পাওয়া যায়নি");else err(e)})};
-$("lk").onclick=function(){auth.signOut()};
-function showLock(){document.body.className="locked";$("sheet").hidden=true;$("psheet").hidden=true;$("dsheet").hidden=true;tab(1);$("p1").value="";mode(false);startWall()}
+$("lk").onclick=doLogout;
+$("lkset").onclick=function(){showLock(getLk()?"unlock":"setlock")};
+function showLock(m){document.body.className="locked";$("sheet").hidden=true;$("psheet").hidden=true;$("dsheet").hidden=true;tab(1);mode(m||"login");startWall()}
 var dref=null,debts=[],pcache=[],curP=null;
 var DT={lend:{l:"ধার দিলাম",s:1},recv:{l:"ফেরত পেলাম",s:-1},borrow:{l:"ধার নিলাম",s:-1},repay:{l:"ফেরত দিলাম",s:1}};
 $("dd").value=today();
@@ -214,16 +282,23 @@ function renderD(){
  $("dnames").innerHTML=ps.map(function(p){return '<option value="'+esc(p.name)+'">'}).join("");
  $("plist").innerHTML=ps.length?ps.map(function(p,i){var c=p.net>0?"in":p.net<0?"ex":"";var t=p.net>0?"পাব "+tk(p.net):p.net<0?"দেব "+tk(-p.net):"মিটে গেছে";return '<li class="pl '+c+'" data-i="'+i+'"><div class="t">'+esc(p.name)+'<span>'+bn(p.rows.length)+' টি লেনদেন</span></div><div class="a" style="'+(c?"":"color:var(--mute)")+'">'+t+'</div><i>›</i></li>'}).join(""):'<div class="empty">কোনো দেনা-পাওনা নেই। উপরে প্রথম হিসাবটি যোগ করুন।</div>';
  if(!$("dsheet").hidden)drawP()}
-function openP(name){curP=name;$("dsheet").hidden=false;drawP()}
+function openP(name){curP=name;$("dqa").value="";$("dsheet").hidden=false;drawP()}
 function drawP(){
  var p=pcache.filter(function(x){return x.name===curP})[0];
  if(!p){$("dsheet").hidden=true;return}
  $("dtitle").textContent=p.name;
+ $("dq").hidden=p.net==0;
+ if(p.net!=0){$("dql").textContent=p.net<0?"আপনি দেবেন "+tk(-p.net)+"। এখন কত দিলেন?":"আপনি পাবেন "+tk(p.net)+"। এখন কত পেলেন?";$("dqb").textContent=p.net<0?"দিলাম":"পেলাম";$("dqf").textContent=p.net<0?"পুরোটা দিলাম":"পুরোটা পেলাম"}
  $("dsum").textContent=p.net>0?"আপনি পাবেন "+tk(p.net):p.net<0?"আপনি দেবেন "+tk(-p.net):"হিসাব মিটে গেছে";
  var rows=p.rows.slice().sort(function(a,b){return b.date.localeCompare(a.date)||(b.ts||0)-(a.ts||0)});
  $("dlist").innerHTML=rows.map(function(x){var out=x.kind=="lend"||x.kind=="repay";var d=new Date(x.date+"T00:00:00").toLocaleDateString("bn-BD",{day:"numeric",month:"long",year:"numeric"});return '<li class="'+(out?"ex":"in")+'"><div class="t">'+DT[x.kind].l+'<span>'+d+(x.note?" — "+esc(x.note):"")+'</span></div><div class="a">'+(out?"−":"+")+tk(x.amt)+'</div><button data-id="'+esc(x.id)+'" aria-label="মুছে ফেলুন">×</button></li>'}).join("")}
 $("plist").onclick=function(e){var li=e.target.closest&&e.target.closest("li[data-i]");if(li)openP(pcache[+li.getAttribute("data-i")].name)};
 $("dlist").onclick=function(e){var id=e.target.getAttribute&&e.target.getAttribute("data-id");if(id&&dref&&confirm("এই লেনদেনটি মুছে ফেলবেন?"))dref.child(id).remove()};
+function cp(){return pcache.filter(function(x){return x.name===curP})[0]}
+$("dq").onsubmit=function(e){e.preventDefault();var p=cp(),a=parseFloat($("dqa").value);if(!p||!(a>0)||!dref||!p.net)return;
+ if(a>Math.abs(p.net)&&!confirm("এই পরিমাণ বাকির চেয়ে বেশি। তবুও যোগ করবেন?"))return;
+ dref.push({name:p.name,kind:p.net<0?"repay":"recv",amt:a,date:today(),note:"",ts:Date.now()});$("dqa").value=""};
+$("dqf").onclick=function(){var p=cp();if(p&&p.net)$("dqa").value=Math.abs(p.net)};
 $("popen").onclick=function(){$("psheet").hidden=false};
 $("pcl").onclick=function(){$("psheet").hidden=true};
 $("psheet").onclick=function(e){if(e.target===this)this.hidden=true};
@@ -239,12 +314,13 @@ $("sheet").onclick=function(e){if(e.target===this)this.hidden=true};
 addEventListener("keydown",function(e){if(e.key==="Escape"){if(!$("dsheet").hidden)$("dsheet").hidden=true;else if(!$("psheet").hidden)$("psheet").hidden=true;else $("sheet").hidden=true}});
 auth.onAuthStateChanged(function(u){
  if(uref){uref.off();uref=null}if(dref){dref.off();dref=null}
- if(u){document.body.className="";stopWall();
+ if(u){curUser=u;
   uref=db.ref("users/"+u.uid+"/tx");
   dref=db.ref("users/"+u.uid+"/debts");
   dref.on("value",function(s){var v=s.val()||{};debts=Object.keys(v).map(function(k){var x=v[k];x.id=k;return x});renderD()},function(){$("plist").innerHTML='<div class="empty">ডাটা পড়তে সমস্যা হয়েছে</div>'});
   uref.on("value",function(s){var v=s.val()||{};data=Object.keys(v).map(function(k){var x=v[k];x.id=k;return x});render()},function(){$("list").innerHTML='<div class="empty">ডাটা পড়তে সমস্যা হয়েছে, ইন্টারনেট ও রুলস পরীক্ষা করুন</div>'});
- }else{data=[];debts=[];render();renderD();showLock()}
+ var lk=getLk();if(lk)showLock("unlock");else if(!skipped())showLock("setlock");else enter();
+ }else{curUser=null;data=[];debts=[];render();renderD();showLock("login")}
 });
 </script>
 </body>
