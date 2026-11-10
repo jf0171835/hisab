@@ -112,7 +112,6 @@ body.locked #lock{display:block}
 .box .add:disabled{opacity:.7}
 .lnk{background:none;border:0;padding:2px 0;cursor:pointer;font-size:14px;color:#6f58c4}
 #fg{align-self:flex-end;margin-top:-4px;font-size:13px;font-weight:600;text-align:right}
-#sw{color:#6e6399}#sw b{color:#6f58c4}
 #sk{color:#8c80b4;text-decoration:underline}
 #le{font-size:13px;color:#d0456f}#le:empty{display:none}
 @media (prefers-reduced-motion:reduce){.cloud,.glow{animation:none}}
@@ -136,7 +135,6 @@ body.locked #lock{display:block}
 <button type="button" id="fg" class="lnk">পাসওয়ার্ড ভুলে গেছেন?</button>
 <div id="le" role="alert"></div>
 <button class="add" id="lb" type="submit">লগইন</button>
-<button type="button" id="sw" class="lnk">অ্যাকাউন্ট নেই? <b>নতুন অ্যাকাউন্ট খুলুন</b></button>
 <button type="button" id="sk" class="lnk" style="display:none">এখন না, পরে করব</button>
 </form></div>
 <svg class="girl" viewBox="0 0 132 270"><ellipse cx="58" cy="262" rx="50" ry="6" fill="rgba(90,60,160,.18)"/><path d="M26 118Q12 150 18 182" stroke="#b8a2f2" stroke-width="17" stroke-linecap="round" fill="none"/><circle cx="19" cy="186" r="8" fill="#ffdcc4"/><path d="M28 190H90l4 55H66l-8-30-8 30H24z" fill="#f8f3ff" stroke="#e3d9f4" stroke-width="1.5"/><ellipse cx="38" cy="253" rx="17" ry="9" fill="#c5b1f6"/><ellipse cx="38" cy="261" rx="18" ry="5" fill="#fff"/><ellipse cx="82" cy="253" rx="17" ry="9" fill="#c5b1f6"/><ellipse cx="82" cy="261" rx="18" ry="5" fill="#fff"/><path d="M22 112Q18 160 28 194H90Q100 160 94 118Q58 100 22 112z" fill="#b8a2f2"/><path d="M38 172Q58 180 80 172" fill="none" stroke="#a48cea" stroke-width="2"/><ellipse cx="58" cy="104" rx="30" ry="12" fill="#a68ee6"/><path d="M90 120Q108 128 112 150" stroke="#b8a2f2" stroke-width="17" stroke-linecap="round" fill="none"/><circle cx="113" cy="154" r="8.5" fill="#ffdcc4"/><path d="M50 104l-2 34M66 104l2 32" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="48" cy="140" r="2.5" fill="#fff"/><circle cx="68" cy="138" r="2.5" fill="#fff"/><circle cx="38" cy="14" r="15" fill="#8b5a35"/><ellipse cx="40" cy="26" rx="10" ry="4" fill="#c9b4f5"/><ellipse cx="58" cy="54" rx="40" ry="40" fill="#8b5a35"/><ellipse cx="58" cy="64" rx="34" ry="32" fill="#ffdcc4"/><path d="M22 60Q26 22 58 22Q92 22 94 60Q80 38 58 40Q36 38 22 60z" fill="#8b5a35"/><path d="M24 58Q20 84 28 96Q31 74 31 60z" fill="#8b5a35"/><path d="M92 58Q96 84 88 96Q85 74 85 60z" fill="#8b5a35"/><ellipse cx="44" cy="68" rx="7" ry="9" fill="#5b3822"/><ellipse cx="72" cy="68" rx="7" ry="9" fill="#5b3822"/><ellipse cx="44" cy="70" rx="4" ry="5" fill="#8a5a36"/><ellipse cx="72" cy="70" rx="4" ry="5" fill="#8a5a36"/><circle cx="46.5" cy="64" r="2.6" fill="#fff"/><circle cx="74.5" cy="64" r="2.6" fill="#fff"/><path d="M38 55q6-4 12-1M66 54q6-3 12 1" fill="none" stroke="#7a4a2a" stroke-width="1.8" stroke-linecap="round"/><ellipse cx="33" cy="80" rx="6" ry="4" fill="#ffa8a0" opacity=".55"/><ellipse cx="83" cy="80" rx="6" ry="4" fill="#ffa8a0" opacity=".55"/><path d="M52 84Q58 91 64 84" fill="#fff" stroke="#c4655a" stroke-width="1.8" stroke-linejoin="round"/></svg>
@@ -240,25 +238,23 @@ function hashPw(pw){var enc=new TextEncoder().encode("hisab:"+curUser.uid+":"+pw
  if(window.crypto&&crypto.subtle)return crypto.subtle.digest("SHA-256",enc).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")});
  var h=5381;for(var i=0;i<enc.length;i++)h=((h<<5)+h+enc[i])>>>0;return Promise.resolve("s"+h)}
 function mode(m){lm=m;var un=m=="unlock",sl=m=="setlock",au=m=="login"||m=="signup";
- var T={login:["স্বাগতম!","চালিয়ে যেতে লগইন করুন","লগইন"],signup:["নতুন অ্যাকাউন্ট","ইমেইল ও কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন","অ্যাকাউন্ট খুলুন"],unlock:["স্বাগতম!","চালিয়ে যেতে অ্যাপ পাসওয়ার্ড দিন","খুলুন"],setlock:["পাসওয়ার্ড সেট করুন","কমপক্ষে ৪ অক্ষর, অ্যাপ খুললেই এটা লাগবে","পাসওয়ার্ড সেট করুন"]}[m];
+ var T={login:["স্বাগতম!","চালিয়ে যেতে লগইন করুন","লগইন"],unlock:["স্বাগতম!","চালিয়ে যেতে অ্যাপ পাসওয়ার্ড দিন","খুলুন"],setlock:["পাসওয়ার্ড সেট করুন","কমপক্ষে ৪ অক্ষর, অ্যাপ খুললেই এটা লাগবে","পাসওয়ার্ড সেট করুন"]}[m];
  $("lt").textContent=T[0];$("ls").textContent=T[1];$("lb").textContent=T[2];
  $("fe").style.display=au?"flex":"none";$("em").required=au;
  $("f2").style.display=sl?"flex":"none";$("p2").required=sl;
  $("p1").minLength=au?(m=="signup"?6:1):(sl?4:1);
  $("p1").placeholder=un?"অ্যাপ পাসওয়ার্ড":sl?"নতুন পাসওয়ার্ড":"পাসওয়ার্ড";
  $("p1").autocomplete=sl||m=="signup"?"new-password":un?"off":"current-password";
- $("sw").style.display=au?"block":"none";$("sw").innerHTML=m=="signup"?"আগে থেকেই অ্যাকাউন্ট আছে? <b>লগইন করুন</b>":"অ্যাকাউন্ট নেই? <b>নতুন অ্যাকাউন্ট খুলুন</b>";
  $("fg").style.display=sl||m=="signup"?"none":"block";$("fg").textContent=un?"ভুলে গেছেন বা বদলাতে চান? লগ আউট করুন":"পাসওয়ার্ড ভুলে গেছেন?";
  $("sk").style.display=sl?"block":"none";
  $("p1").value="";$("p2").value="";$("p1").type="password";$("p2").type="password";document.querySelectorAll(".eye").forEach(function(b){b.classList.remove("show")});msg("")}
 document.querySelectorAll(".eye").forEach(function(b){b.onclick=function(){var i=$(b.getAttribute("data-t")),sh=i.type=="password";i.type=sh?"text":"password";b.classList.toggle("show",sh)}});
-$("sw").onclick=function(){mode(lm=="signup"?"login":"signup")};
 $("sk").onclick=function(){if(curUser)lsSet("hisab-lockskip-"+curUser.uid,"1");enter()};
 $("lf").onsubmit=function(e){e.preventDefault();msg("");var pw=$("p1").value;
  if(lm=="unlock"){hashPw(pw).then(function(h){if(h===getLk())enter();else{msg("পাসওয়ার্ড ভুল হয়েছে, আবার চেষ্টা করুন");$("p1").value="";$("p1").focus()}});return}
  if(lm=="setlock"){if(pw.length<4){msg("কমপক্ষে ৪ অক্ষরের পাসওয়ার্ড দিন");return}if(pw!==$("p2").value){msg("দুটি পাসওয়ার্ড মিলছে না");return}hashPw(pw).then(function(h){setLk(h);enter()});return}
  var em=$("em").value.trim();$("lb").disabled=true;
- (lm=="signup"?auth.createUserWithEmailAndPassword(em,pw):auth.signInWithEmailAndPassword(em,pw)).catch(err).then(function(){$("lb").disabled=false})};
+ auth.signInWithEmailAndPassword(em,pw).catch(err).then(function(){$("lb").disabled=false})};
 $("fg").onclick=function(){if(lm=="unlock"){if(confirm("লগ আউট করলে অ্যাপ পাসওয়ার্ড মুছে যাবে এবং আবার ইমেইল-পাসওয়ার্ড দিয়ে লগইন করতে হবে। চালিয়ে যাবেন?"))doLogout();return}var em=$("em").value.trim();
  if(!em){msg("আগে উপরের ঘরে আপনার ইমেইল লিখুন, তারপর এখানে চাপুন");$("em").focus();return}
  msg("পাঠানো হচ্ছে…");
